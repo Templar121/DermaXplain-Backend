@@ -15,10 +15,19 @@ def send_registration_email(to_email: str, name: str):
     body = f"""
     Hi {name},
 
-    🎉 You have successfully registered at our Skin Cancer Detection Platform.
+    🎉 Welcome to SkinSights AI!
 
-    Thanks for joining!
-    """
+    We're excited to have you on board. You have successfully registered at SkinSights AI, your trusted platform for explainable skin cancer detection and insights.
+
+    With SkinSights AI, you can confidently analyze skin images with state-of-the-art AI technology that not only detects potential concerns but also provides clear, understandable explanations to help you make informed decisions.
+
+    Thank you for joining our mission to bring advanced, transparent AI diagnostics to everyone.
+
+    If you have any questions or need assistance, feel free to reach out to our support team.
+
+    Stay safe and healthy,  
+    The SkinSights AI Team
+"""
 
     msg = EmailMessage()
     msg["Subject"] = subject
