@@ -15,3 +15,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: str | None = None
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str

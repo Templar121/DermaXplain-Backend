@@ -32,8 +32,8 @@ def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
 
 
 @router.post("/login", response_model=schemas.Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
-    user = auth.authenticate_user(db, form_data.username, form_data.password)
+def login(payload: schemas.LoginRequest, db: Session = Depends(database.get_db)):
+    user = auth.authenticate_user(db, payload.email, payload.password)
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect email or password")
     token = auth.create_access_token(data={"sub": user.email})
