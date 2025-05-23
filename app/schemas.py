@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 class UserCreate(BaseModel):
     email: EmailStr
@@ -7,14 +8,19 @@ class UserCreate(BaseModel):
 
 class UserOut(BaseModel):
     email: EmailStr
-    message: str
+    name: str
+    id: int
+    # is_admin: bool
+
+    # class Config:
+    #     orm_mode = True
 
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 class TokenData(BaseModel):
-    email: str | None = None
+    email: Optional[str] = None
 
 class LoginRequest(BaseModel):
     email: str

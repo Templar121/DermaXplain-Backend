@@ -43,6 +43,17 @@ pip install -r requirements.txt
 ```bash
 uvicorn app.main:app --reload
 ```
+Initialize the Database 
+
+```bash
+python -m app.init_db
+```
+
+Delete the Database
+
+```bash
+python -m app.reset_db
+```
 
 ## API ENDPOINTS
 
