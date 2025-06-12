@@ -43,17 +43,6 @@ pip install -r requirements.txt
 ```bash
 uvicorn app.main:app --reload
 ```
-Initialize the Database 
-
-```bash
-python -m app.init_db
-```
-
-Delete the Database
-
-```bash
-python -m app.reset_db
-```
 
 ## API ENDPOINTS
 
@@ -61,6 +50,7 @@ python -m app.reset_db
 ```bash
 /api/health
 ```
+
 ### 2. POST /api/users/register
 ```json
 {
@@ -70,7 +60,7 @@ python -m app.reset_db
 }
 ```
 
-### 3. /api/users/login
+### 3. POST /api/users/login
 ```json
 {
   "email": "user@example.com",
@@ -78,7 +68,20 @@ python -m app.reset_db
 }
 ```
 
-### 4. /api/users/me
+### 4. GET /api/users/me
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login >
+```
+
+### 5. GET /api/db
+
+```bash
+Check Database Connection
+```
+
+### 6. DELETE /api/users/delete
 ```bash
 Header 
 

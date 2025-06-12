@@ -43,3 +43,37 @@ def send_registration_email(to_email: str, name: str):
             print("✅ Registration email sent.")
     except Exception as e:
         print(f"❌ Failed to send email: {e}")
+        
+        
+        
+def send_deletion_email(to_email: str, name: str):
+    subject = "Account Deleted Successfully"
+    body = f"""
+    Hi {name},
+
+    This is to confirm that your account at SkinSights AI has been successfully deleted.
+
+    We're sorry to see you go. Your data has been permanently removed from our platform.  
+    If you ever wish to return, you're always welcome to register again and explore our explainable AI-powered skin diagnostics.
+
+    Thank you for having been a part of SkinSights AI.  
+    We wish you all the best.
+
+    Stay healthy and take care,  
+    The SkinSights AI Team
+    """
+
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = EMAIL_USER
+    msg["To"] = to_email
+    msg.set_content(body)
+
+    try:
+        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as smtp:
+            smtp.starttls()
+            smtp.login(EMAIL_USER, EMAIL_PASSWORD)
+            smtp.send_message(msg)
+            print("✅ Deletion confirmation email sent.")
+    except Exception as e:
+        print(f"❌ Failed to send deletion email: {e}")

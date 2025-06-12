@@ -1,25 +1,19 @@
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
-
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Load the MongoDB connection string from the .env file
+MONGO_URL = os.getenv("MONGO_URL")
 
-engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
-)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+# Create a Motor client instance
+client = AsyncIOMotorClient(MONGO_URL)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# Access the database (you can rename "your_db_name" accordingly)
+db = client["your_db_name"]
 
-
+# Optional: expose collections
+users_collection = db["users"]
+auth_collection = db["auth"]
+# Add more collections as needed
