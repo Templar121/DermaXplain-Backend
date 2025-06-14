@@ -85,5 +85,14 @@ Check Database Connection
 ```bash
 Header 
 
-Authorization: Bearer < bearer token returned from /login >
+Authorization: Bearer < bearer token returned from /login iof User >
 ```
+
+### 7. GET /api/admin/users
+
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of Admin >
+```
+
