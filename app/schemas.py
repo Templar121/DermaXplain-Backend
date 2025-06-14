@@ -57,3 +57,23 @@ class TokenData(BaseModel):
 class LoginRequest(BaseModel):
     email: str
     password: str
+
+class ScanCreate(BaseModel):
+    patient_name: str
+    patient_age: int
+    gender: str
+    scan_area: str
+    additional_info: Optional[str] = None
+
+class ScanOut(BaseModel):
+    id: Optional[str] = Field(alias="_id")
+    patient_name: str
+    patient_age: int
+    additional_info: Optional[str]
+    scan_area: str
+    gender: str
+
+    class Config:
+        json_encoders = {ObjectId: str}
+        populate_by_name = True
+        arbitrary_types_allowed = True

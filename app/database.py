@@ -16,4 +16,5 @@ db = client["DermaXplain"]
 # Optional: expose collections
 users_collection = db["users"]
 auth_collection = db["auth"]
+scans_collection = db["scans"]
 # Add more collections as needed
