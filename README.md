@@ -89,10 +89,17 @@ Authorization: Bearer < bearer token returned from /login iof User >
 ```
 
 ### 7. GET /api/admin/users
-
 ```bash
 Header 
 
 Authorization: Bearer < bearer token returned from /login of Admin >
 ```
 
+### 8. DELETE /api/admin/users/user_id
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of Admin >
+```
+
+### 9. POST /scan/upload-scan
