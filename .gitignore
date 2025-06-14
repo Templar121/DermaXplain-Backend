@@ -32,3 +32,4 @@ dist/
 # FastAPI specific (if using static/media folders)
 staticfiles/
 media/
+test.py

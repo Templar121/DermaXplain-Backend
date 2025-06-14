@@ -3,14 +3,14 @@ from typing import Optional, Any
 from bson import ObjectId
 from pydantic_core import core_schema
 
-# ✅ Updated PyObjectId for Pydantic v2
+# ✅ Pydantic v2 compatible ObjectId
 class PyObjectId(ObjectId):
     @classmethod
     def __get_pydantic_core_schema__(cls, source_type: Any, handler):
         return core_schema.no_info_after_validator_function(
-        cls.validate,
-        core_schema.any_schema()
-    )
+            cls.validate,
+            core_schema.any_schema()
+        )
 
     @classmethod
     def validate(cls, v: Any) -> ObjectId:
@@ -21,37 +21,39 @@ class PyObjectId(ObjectId):
         raise ValueError("Invalid ObjectId")
 
 
-#  Schema for user registration
+# ✅ Schema for user registration
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
     name: str
+    role: Optional[str] = "user"  # defaults to "user"
 
 
-#  Schema for user response (e.g., /register, /me)
+# ✅ Schema for user response (e.g., /register, /me, admin)
 class UserOut(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id")
     email: EmailStr
     name: str
+    role: Optional[str] = "user"
 
     class Config:
         json_encoders = {ObjectId: str}
-        populate_by_name = True  # replaces allow_population_by_field_name
+        populate_by_name = True
         arbitrary_types_allowed = True
 
 
-#  Token schema
+# ✅ Token schema
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 
-#  Token data for internal use
+# ✅ Token data for internal use
 class TokenData(BaseModel):
     email: Optional[str] = None
 
 
-#  Login request body
+# ✅ Login request body
 class LoginRequest(BaseModel):
     email: str
     password: str

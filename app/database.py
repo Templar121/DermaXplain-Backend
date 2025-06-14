@@ -11,7 +11,7 @@ MONGO_URL = os.getenv("MONGO_URL")
 client = AsyncIOMotorClient(MONGO_URL)
 
 # Access the database (you can rename "your_db_name" accordingly)
-db = client["your_db_name"]
+db = client["DermaXplain"]
 
 # Optional: expose collections
 users_collection = db["users"]
