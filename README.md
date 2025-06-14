@@ -112,3 +112,10 @@ Authorization: Bearer < bearer token returned from /login of Admin >
   "additional_info": "Red patches visible"
 }
 ```
+
+### 10. GET /scan/my-scans
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of User >
+```
