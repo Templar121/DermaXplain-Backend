@@ -103,3 +103,12 @@ Authorization: Bearer < bearer token returned from /login of Admin >
 ```
 
 ### 9. POST /scan/upload-scan
+```json
+{
+  "patient_name": "Alice Roy",
+  "patient_age": 32,
+  "gender": "Female",
+  "scan_area": "Face",
+  "additional_info": "Red patches visible"
+}
+```
