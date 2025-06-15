@@ -61,14 +61,29 @@ uvicorn app.main:app --reload
 ## Health Check and DB Connection check
 
 ### 1. GET /api/health 
+
+### GET
 ```bash
 /api/health
+```
+### Response
+```json
+{
+    "status": "API is healthy ✅"
+}
 ```
 
 ### 2. GET /api/db
 
+### GET
 ```bash
 Check Database Connection
+```
+### Response
+```json
+{
+    "status": "✅ API is healthy and MongoDB connection successful!"
+}
 ```
 
 ## User Endpoints
@@ -84,6 +99,9 @@ Check Database Connection
 }
 ```
 ### Recieve
+```json
+
+```
 
 
 
