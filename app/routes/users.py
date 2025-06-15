@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from .. import schemas, auth, email
-from ..database import users_collection
+from ..database import users_collection, scans_collection
 from ..auth import get_current_user
 from bson import ObjectId
 
@@ -51,7 +51,10 @@ async def delete_account(current_user: dict = Depends(get_current_user)):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="User not found or already deleted")
 
+    # Delete associated scans
+    await scans_collection.delete_many({"user_email": current_user["email"]})
+
+    # Send confirmation email
     email.send_deletion_email(to_email=current_user["email"], name=current_user["name"])
 
-    # ⚠ 204 must return nothing
-    return None
+    return None  # ⚠ 204 No Content must return nothing
