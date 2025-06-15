@@ -116,6 +116,82 @@ def send_registration_email(to_email: str, name: str):
         
         
         
+def send_deletion_email(to_email: str, name: str):
+    subject = "😔 Your SkinSights AI Account Has Been Deleted"
+
+    # HTML body with clean design, button to rejoin, and support link
+    body_html = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                margin: 0;
+                padding: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: #fafafa;
+                color: #333;
+            }}
+            .container {{
+                background-color: #ffffff;
+                max-width: 600px;
+                margin: 40px auto;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            }}
+            .content {{
+                padding: 30px;
+            }}
+            h1 {{
+                color: #E74C3C;
+                font-size: 22px;
+                margin-bottom: 10px;
+            }}
+            p {{
+                line-height: 1.6;
+                font-size: 16px;
+                margin: 16px 0;
+            }}
+            .button {{
+                display: inline-block;
+                background-color: #E74C3C;
+                color: #ffffff !important;
+                text-decoration: none;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-weight: bold;
+                margin: 20px 0;
+            }}
+            .footer {{
+                font-size: 12px;
+                color: #777;
+                padding: 20px 30px;
+                text-align: center;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="content">
+                <h1>Hi {name},</h1>
+                <p>Your account at <strong>SkinSights AI</strong> has been successfully deleted.</p>
+                <p>We’re sorry to see you go! All your data has been permanently removed from our platform in accordance with our privacy policy.</p>
+                <a href="https://skinsights.ai/register" class="button">Re-register Now</a>
+                <p>If you have any feedback or questions, please let us know at <a href="mailto:support@skinsights.ai">support@skinsights.ai</a>. We’d love to hear from you.</p>
+                <p>Thank you for being part of our journey. We wish you health and happiness.</p>
+                <p><em>The SkinSights AI Team</em></p>
+            </div>
+            <div class="footer">
+                This is an automated email—please do not reply.<br />
+                &copy; {2025} SkinSights AI. All rights reserved.
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    _send_email(to_email, subject, body_html)
+    
+    
 def send_admin_deletion_email(to_email: str, name: str):
     subject = "⚠️ Your SkinSights AI Account Was Deleted by Admin"
 
@@ -190,25 +266,7 @@ def send_admin_deletion_email(to_email: str, name: str):
     """
 
     _send_email(to_email, subject, body_html)
-    
-    
-def send_admin_deletion_email(to_email: str, name: str):
-    subject = "Your Account Has Been Deleted by Admin"
 
-    body_html = f"""
-    <html>
-    <body style="font-family: Arial, sans-serif; color: #333;">
-        <h2>Account Deletion Notice</h2>
-        <p>Dear {name},</p>
-        <p>We would like to inform you that your account on DermaXplain has been deleted by an administrator.</p>
-        <p>If you believe this was a mistake or have any questions, please contact support immediately.</p>
-        <br>
-        <p>— The DermaXplain Team</p>
-    </body>
-    </html>
-    """
-
-    _send_email(to_email, subject, body_html)
     
     
 def _send_email(to_email: str, subject: str, body_html: str):
