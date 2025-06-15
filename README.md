@@ -73,7 +73,9 @@ Check Database Connection
 
 ## User Endpoints
 
-### 2. POST /api/users/register
+### 1. POST /api/users/register
+
+### POST
 ```json
 {
   "email": "user@example.com",
@@ -81,8 +83,11 @@ Check Database Connection
   "name": "John Doe"
 }
 ```
+### Recieve
 
-### 3. POST /api/users/login
+
+
+### 2. POST /api/users/login
 ```json
 {
   "email": "user@example.com",
@@ -90,7 +95,7 @@ Check Database Connection
 }
 ```
 
-### 4. GET /api/users/me
+### 3. GET /api/users/me
 ```bash
 Header 
 
