@@ -98,36 +98,89 @@ Check Database Connection
   "name": "John Doe"
 }
 ```
-### Recieve
+### Response
 ```json
-
+{
+    "_id": "unique user id",
+    "email": "user email",
+    "name": "user name",
+    "role": "user" // user by default
+}
 ```
 
-
-
 ### 2. POST /api/users/login
+
+### POST
 ```json
 {
   "email": "user@example.com",
   "password": "Pass123!"
 }
 ```
+### Response
+```json
+{
+    "access_token": "user specific access token",
+    "token_type": "bearer"
+}
+```
 
 ### 3. GET /api/users/me
+
+### GET
 ```bash
 Header 
 
 Authorization: Bearer < bearer token returned from /login >
 ```
+### Response
+```json
+{
+    "_id": "unique user id",
+    "email": "user email",
+    "name": "user name",
+    "role": "user" // user by default
+}
+```
 
-
-
-### 6. DELETE /api/users/delete
+### 4. DELETE /api/users/delete
 ```bash
 Header 
 
 Authorization: Bearer < bearer token returned from /login iof User >
 ```
+
+### 5. POST /scan/upload-scan
+```json
+{
+  "patient_name": "Alice Roy",
+  "patient_age": 32,
+  "gender": "Female",
+  "scan_area": "Face",
+  "additional_info": "Red patches visible"
+}
+```
+
+### 6. GET /scan/my-scans
+
+### GET
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of User >
+```
+### Response
+```json
+{
+  "patient_name": "Alice Roy",
+  "patient_age": 32,
+  "gender": "Female",
+  "scan_area": "Face",
+  "additional_info": "Red patches visible"
+}
+```
+
+## Admin Endpoints
 
 ### 7. GET /api/admin/users
 ```bash
@@ -143,20 +196,4 @@ Header
 Authorization: Bearer < bearer token returned from /login of Admin >
 ```
 
-### 9. POST /scan/upload-scan
-```json
-{
-  "patient_name": "Alice Roy",
-  "patient_age": 32,
-  "gender": "Female",
-  "scan_area": "Face",
-  "additional_info": "Red patches visible"
-}
-```
 
-### 10. GET /scan/my-scans
-```bash
-Header 
-
-Authorization: Bearer < bearer token returned from /login of User >
-```
