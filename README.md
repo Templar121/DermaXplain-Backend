@@ -51,17 +51,27 @@ EMAIL_PASSWORD= <password>
 MONGO_URL=<cluster connecrtion url for database>
 ```
 
-### Run the API 
+## Run the API 
 ```bash
 uvicorn app.main:app --reload
 ```
 
 ## API ENDPOINTS
 
+## Health Check and DB Connection check
+
 ### 1. GET /api/health 
 ```bash
 /api/health
 ```
+
+### 2. GET /api/db
+
+```bash
+Check Database Connection
+```
+
+## User Endpoints
 
 ### 2. POST /api/users/register
 ```json
@@ -87,11 +97,7 @@ Header
 Authorization: Bearer < bearer token returned from /login >
 ```
 
-### 5. GET /api/db
 
-```bash
-Check Database Connection
-```
 
 ### 6. DELETE /api/users/delete
 ```bash
