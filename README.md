@@ -39,6 +39,18 @@ source mlproj/Scripts/activate
 pip install -r requirements.txt
 ```
 
+## Create .ENV File 
+```bash
+SECRET_KEY=<your super secret key>
+ALGORITHM=<Your Hashing Algorithm
+ACCESS_TOKEN_EXPIRE_MINUTES=<time in minutes>
+EMAIL_HOST=<desired email host>
+EMAIL_PORT=<port number>
+EMAIL_USER=<company or organization email>
+EMAIL_PASSWORD= <password>
+MONGO_URL=<cluster connecrtion url for database>
+```
+
 ### Run the API 
 ```bash
 uvicorn app.main:app --reload
