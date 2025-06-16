@@ -2,6 +2,8 @@ from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, Any
 from bson import ObjectId
 from pydantic_core import core_schema
+from datetime import datetime
+from typing import Optional, Dict
 
 # ✅ Pydantic v2 compatible ObjectId
 class PyObjectId(ObjectId):
@@ -65,13 +67,19 @@ class ScanCreate(BaseModel):
     scan_area: str
     additional_info: Optional[str] = None
 
+
 class ScanOut(BaseModel):
     id: Optional[str] = Field(alias="_id")
+    user_email: str
     patient_name: str
     patient_age: int
-    additional_info: Optional[str]
-    scan_area: str
     gender: str
+    scan_area: str
+    additional_info: Optional[str] = None
+    image_filename: Optional[str]
+    image_path: Optional[str]
+    uploaded_at: Optional[datetime]
+    prediction: Optional[Dict[str, str | float]]  # {'class': ..., 'confidence': ...}
 
     class Config:
         json_encoders = {ObjectId: str}

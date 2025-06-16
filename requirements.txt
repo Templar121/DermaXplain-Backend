@@ -1,11 +1,32 @@
+# Core tooling
+setuptools>=65.5.0
+wheel
+
+# ASGI framework
 fastapi
-uvicorn
-sqlalchemy
-python-dotenv
+uvicorn[standard]
+
+# ORM & DB
+psycopg2-binary
+motor            # async MongoDB driver
+
+# Auth & Security
 passlib[bcrypt]
 python-jose[cryptography]
+
+# Validation
 pydantic
 email-validator
+
+# Forms & file uploads
 python-multipart
-psycopg2-binary
-motor
+
+# Env vars
+python-dotenv
+
+# Image processing
+Pillow
+
+# ML runtime (prebuilt wheels for Win+py3.10)
+tensorflow==2.17.1
+numpy==1.25.0
