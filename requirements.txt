@@ -30,3 +30,7 @@ Pillow
 # ML runtime (prebuilt wheels for Win+py3.10)
 tensorflow==2.17.1
 numpy==1.25.0
+
+# SSL & DNS — REQUIRED for MongoDB Atlas on Render
+certifi
+dnspython
