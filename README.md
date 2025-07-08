@@ -151,13 +151,15 @@ Authorization: Bearer < bearer token returned from /login iof User >
 ```
 
 ### 5. POST /scan/upload-scan
-```json
+```json 
 {
+  "(form data)"
   "patient_name": "Alice Roy",
   "patient_age": 32,
   "gender": "Female",
   "scan_area": "Face",
-  "additional_info": "Red patches visible"
+  "additional_info": "Red patches visible",
+  "image": "file upload"
 }
 ```
 
@@ -172,17 +174,62 @@ Authorization: Bearer < bearer token returned from /login of User >
 ### Response
 ```json
 {
+  "id": "ID",
   "patient_name": "Alice Roy",
   "patient_age": 32,
-  "gender": "Female",
-  "scan_area": "Face",
-  "additional_info": "Red patches visible"
+  "preidction": {
+    "class": "class",
+    "confidence": "confidence"
+  }
+  
 }
+```
+
+### 7. GET /scan/my-scans/{id}
+
+### GET
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of User >
+```
+### Response
+```json
+{
+  "id": "ID",
+  "patient_name": "Alice Roy",
+  "patient_age": 32,
+  "gender": "Male",
+  "scan_area": "scan_area",
+  "additional_info": "info",
+  "uploaded_at": "uploaded_at",
+  "image_filename": "image_filename",
+  "preidction": {
+    "class": "class",
+    "confidence": "confidence"
+  },
+  "image_base64": "imgae_base64"
+  
+}
+```
+
+### 8. DELETE /scan/my-scans/{id}
+
+### DELETE
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of User >
+```
+### Response
+```json
+200 OK
 ```
 
 ## Admin Endpoints
 
 ### 1. GET /api/admin/users
+
 ```bash
 Header 
 

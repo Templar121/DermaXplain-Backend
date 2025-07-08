@@ -67,21 +67,27 @@ class ScanCreate(BaseModel):
     scan_area: str
     additional_info: Optional[str] = None
 
+class Prediction(BaseModel):
+    class_: str          = Field(alias="class")
+    confidence: float
 
+    class Config:
+        populate_by_name = True
+        
 class ScanOut(BaseModel):
-    id: Optional[str] = Field(alias="_id")
-    user_email: str
+    id: str = Field(alias="_id")
     patient_name: str
     patient_age: int
     gender: str
     scan_area: str
-    additional_info: Optional[str] = None
-    image_filename: Optional[str]
-    image_path: Optional[str]
-    uploaded_at: Optional[datetime]
-    prediction: Optional[Dict[str, str | float]]  # {'class': ..., 'confidence': ...}
+    additional_info: Optional[str]
+    uploaded_at: datetime
+    image_filename: str
+    prediction: Prediction  # or Dict[str, float]
+    image_base64: Optional[str]
 
     class Config:
-        json_encoders = {ObjectId: str}
-        populate_by_name = True
+        from_attributes      = True
+        json_encoders        = {ObjectId: str}
+        populate_by_name     = True
         arbitrary_types_allowed = True

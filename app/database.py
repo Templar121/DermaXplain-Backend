@@ -1,7 +1,8 @@
 import os
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorGridFSBucket
 from dotenv import load_dotenv
 import certifi
+import gridfs
 
 load_dotenv()
 
@@ -20,6 +21,8 @@ client = AsyncIOMotorClient(MONGO_URL)
 
 # Access the database (you can rename "your_db_name" accordingly)
 db = client["DermaXplain"]
+
+fs_bucket = AsyncIOMotorGridFSBucket(db)
 
 # Optional: expose collections
 users_collection = db["users"]
