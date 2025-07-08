@@ -125,6 +125,14 @@ Check Database Connection
 }
 ```
 
+### Google Auth
+### POST /google-login
+### Content-Type: application/json
+
+{
+  "token": "<Google ID token>"
+}
+
 ### 3. GET /api/users/me
 
 ### GET
