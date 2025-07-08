@@ -8,7 +8,7 @@
 clone the repository
 
 ```bash
-https://github.com/Templar121/DermaXplain-Backend
+git clone https://github.com/Templar121/DermaXplain-Backend.git
 ```
 
 ### STEP A - Create a conda environment after opening the repository
@@ -42,7 +42,7 @@ pip install -r requirements.txt
 ## Create .ENV File 
 ```bash
 SECRET_KEY=<your super secret key>
-ALGORITHM=<Your Hashing Algorithm
+ALGORITHM=<Your Hashing Algorithm>
 ACCESS_TOKEN_EXPIRE_MINUTES=<time in minutes>
 EMAIL_HOST=<desired email host>
 EMAIL_PORT=<port number>
@@ -128,10 +128,11 @@ Check Database Connection
 ### Google Auth
 ### POST /google-login
 ### Content-Type: application/json
-
+```json
 {
   "token": "<Google ID token>"
 }
+```
 
 ### 3. GET /api/users/me
 
@@ -159,9 +160,9 @@ Authorization: Bearer < bearer token returned from /login iof User >
 ```
 
 ### 5. POST /scan/upload-scan
+### Content-Type: multipart/form-data
 ```json 
 {
-  "(form data)"
   "patient_name": "Alice Roy",
   "patient_age": 32,
   "gender": "Female",
@@ -185,7 +186,7 @@ Authorization: Bearer < bearer token returned from /login of User >
   "id": "ID",
   "patient_name": "Alice Roy",
   "patient_age": 32,
-  "preidction": {
+  "prediction": {
     "class": "class",
     "confidence": "confidence"
   }
@@ -212,7 +213,7 @@ Authorization: Bearer < bearer token returned from /login of User >
   "additional_info": "info",
   "uploaded_at": "uploaded_at",
   "image_filename": "image_filename",
-  "preidction": {
+  "prediction": {
     "class": "class",
     "confidence": "confidence"
   },
