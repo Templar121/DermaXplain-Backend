@@ -109,7 +109,7 @@ async def get_scan_detail(scan_id: str, current_user: dict = Depends(get_current
 
     return ScanOut(**doc)
 
-@router.delete("/{scan_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/my-scans/{scan_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_scan(scan_id: str, current_user: dict = Depends(get_current_user)):
     print(f"Authenticated user: {current_user['email']}")
 
