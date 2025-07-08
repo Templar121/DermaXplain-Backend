@@ -7,7 +7,6 @@ fastapi
 uvicorn[standard]
 
 # ORM & DB
-psycopg2-binary
 motor            # async MongoDB driver
 
 # Auth & Security
@@ -27,9 +26,11 @@ python-dotenv
 # Image processing
 Pillow
 
-# ML runtime (prebuilt wheels for Win+py3.10)
-tensorflow==2.17.1
-numpy==1.25.0
+# ML runtime — CPU only
+tensorflow-cpu==2.17.1
+
+# Numeric library (keep on 1.x to avoid compatibility issues)
+numpy<2.0,>=1.24.0
 
 # SSL & DNS — REQUIRED for MongoDB Atlas on Render
 certifi
