@@ -13,6 +13,16 @@ import asyncio
 
 router = APIRouter()
 
+readable_class_mapping = {
+    "nv": "Melanocytic Nevi",
+    "mel": "Melanoma",
+    "bkl": "Benign Keratosis-like Lesions",
+    "bcc": "Basal Cell Carcinoma",
+    "akiec": "Actinic Keratoses",
+    "vasc": "Vascular Lesions",
+    "df": "Dermatofibroma"
+}
+
 UPLOAD_DIR = "temp_uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
@@ -134,20 +144,37 @@ async def delete_scan(scan_id: str, current_user: dict = Depends(get_current_use
         
 @router.get("/my-scans/{scan_id}/download")
 async def download_scan_pdf(scan_id: str, user=Depends(get_current_user)):
-    scan = await scans_collection.find_one({"_id": ObjectId(scan_id), "user_email": user["email"]})
+    scan = await scans_collection.find_one({
+        "_id": ObjectId(scan_id),
+        "user_email": user["email"]
+    })
+
     if not scan:
         raise HTTPException(status_code=404, detail="Scan not found")
 
+    # Base64 encode the image for PDF
+    raw = scan.get("image_data")
+    if raw:
+        image_bytes = raw if isinstance(raw, (bytes, bytearray)) else raw.value
+        scan["image_base64"] = base64.b64encode(image_bytes).decode("utf-8")
+    else:
+        scan["image_base64"] = None
+
+    # Map class label to readable name
+    class_code = scan["prediction"]["class"]
+    readable_name = readable_class_mapping.get(class_code, "Unknown")
+    scan["prediction"]["readable_name"] = readable_name
+
+    # Create PDF
     os.makedirs("temp_uploads", exist_ok=True)
     pdf_path = f"temp_uploads/report_{scan_id}.pdf"
     generate_pdf_report(user, scan, pdf_path)
 
-    # Schedule the file for cleanup after 10 seconds
+    # Cleanup after 10s
     async def cleanup():
         await asyncio.sleep(10)
         if os.path.exists(pdf_path):
             os.remove(pdf_path)
-
     asyncio.create_task(cleanup())
 
     return FileResponse(

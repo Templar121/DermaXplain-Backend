@@ -235,6 +235,17 @@ Authorization: Bearer < bearer token returned from /login of User >
 200 OK
 ```
 
+### 9. GET /scan/my-scans/{id}/download
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of User >
+```
+### Response
+```json
+PDF Report
+```
+
 ## Admin Endpoints
 
 ### 1. GET /api/admin/users
