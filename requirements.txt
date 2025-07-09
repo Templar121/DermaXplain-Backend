@@ -25,6 +25,7 @@ python-dotenv
 
 # Image processing
 Pillow
+reportlab
 
 # ML runtime — CPU only
 tensorflow-cpu==2.17.1

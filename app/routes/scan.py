@@ -7,6 +7,9 @@ from typing import List
 from bson import ObjectId, Binary
 from datetime import datetime
 import uuid, shutil, os, base64
+from fastapi.responses import FileResponse
+from app.utils.pdf_generator import generate_pdf_report
+import asyncio
 
 router = APIRouter()
 
@@ -128,3 +131,27 @@ async def delete_scan(scan_id: str, current_user: dict = Depends(get_current_use
             status_code=404,
             detail="Scan not found or you do not have permission to delete it"
         )
+        
+@router.get("/my-scans/{scan_id}/download")
+async def download_scan_pdf(scan_id: str, user=Depends(get_current_user)):
+    scan = await scans_collection.find_one({"_id": ObjectId(scan_id), "user_email": user["email"]})
+    if not scan:
+        raise HTTPException(status_code=404, detail="Scan not found")
+
+    os.makedirs("temp_uploads", exist_ok=True)
+    pdf_path = f"temp_uploads/report_{scan_id}.pdf"
+    generate_pdf_report(user, scan, pdf_path)
+
+    # Schedule the file for cleanup after 10 seconds
+    async def cleanup():
+        await asyncio.sleep(10)
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
+
+    asyncio.create_task(cleanup())
+
+    return FileResponse(
+        path=pdf_path,
+        filename=f"DermaXplain_Report_{scan_id}.pdf",
+        media_type="application/pdf"
+    )
