@@ -305,4 +305,46 @@ Header
 Authorization: Bearer < bearer token returned from /login of Admin >
 ```
 
+### 3. GET /api/admin/users/{user_id}/scans
+```bash
+Header 
 
+Authorization: Bearer < bearer token returned from /login of Admin >
+```
+### Response 
+```json
+{
+  "user_id": "686d29cf645a53096a3c2011",
+  "scan_ids": [
+    "686de2933c82d3521338f88a",
+    "685040af2b9635a2dd99e0d5"
+  ]
+}
+```
+
+### 4. GET /api/admin/scans/{scan_id} 
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of Admin >
+```
+### Response 
+```json
+{
+  "_id": "686de2933c82d3521338f88a",
+  "user_email": "user@example.com",
+  "patient_name": "Alice Roy",
+  "patient_age": 32,
+  "gender": "Female",
+  "scan_area": "Face",
+  "additional_info": "Red Patches",
+  "uploaded_at": "2025-07-09T03:31:31.884000",
+  "image_filename": "ISIC_0029307.jpg",
+  "image_content_type": "image/jpeg",
+  "prediction": {
+    "class": "nv",
+    "confidence": 0.8876
+  },
+  "image_base64": "iVBORw0KGgoAAAANSUhEUgAA..."
+}
+```

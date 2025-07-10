@@ -16,9 +16,6 @@ client = AsyncIOMotorClient(
     serverSelectionTimeoutMS=20000,
 )
 
-# Create a Motor client instance
-client = AsyncIOMotorClient(MONGO_URL)
-
 # Access the database (you can rename "your_db_name" accordingly)
 db = client["DermaXplain"]
 
