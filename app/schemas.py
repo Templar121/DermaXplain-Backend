@@ -91,3 +91,6 @@ class ScanOut(BaseModel):
         json_encoders        = {ObjectId: str}
         populate_by_name     = True
         arbitrary_types_allowed = True
+        
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr

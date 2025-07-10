@@ -286,3 +286,79 @@ def _send_email(to_email: str, subject: str, body_html: str):
             print(f"✅ Email '{subject}' sent successfully.")
     except Exception as e:
         print(f"❌ Failed to send email '{subject}': {e}")
+
+async def send_reset_email(to_email: str, link: str):
+    subject = "🔒 Reset Your SkinSights AI Password"
+
+    # HTML body with clean design, button to reset password, and support link
+    body_html = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                margin: 0;
+                padding: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: #fafafa;
+                color: #333;
+            }}
+            .container {{
+                background-color: #ffffff;
+                max-width: 600px;
+                margin: 40px auto;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            }}
+            .content {{
+                padding: 30px;
+            }}
+            h1 {{
+                color: #3498DB;
+                font-size: 22px;
+                margin-bottom: 10px;
+            }}
+            p {{
+                line-height: 1.6;
+                font-size: 16px;
+                margin: 16px 0;
+            }}
+            .button {{
+                display: inline-block;
+                background-color: #3498DB;
+                color: #ffffff !important;
+                text-decoration: none;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-weight: bold;
+                margin: 20px 0;
+            }}
+            .footer {{
+                font-size: 12px;
+                color: #777;
+                padding: 20px 30px;
+                text-align: center;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="content">
+                <h1>Password Reset Requested</h1>
+                <p>Hello,</p>
+                <p>We received a request to reset the password for your <strong>SkinSights AI</strong> account (<em>{to_email}</em>).</p>
+                <p>Click the button below to choose a new password. This link will expire in 60 minutes for your security.</p>
+                <a href="{link}" class="button">Reset My Password</a>
+                <p>If you didn’t request a password reset, you can safely ignore this email. No changes were made to your account.</p>
+                <p>If you have any questions or need further assistance, please contact our support team at <a href="mailto:support@skinsights.ai">support@skinsights.ai</a>.</p>
+                <p>Stay safe,<br /><em>The SkinSights AI Team</em></p>
+            </div>
+            <div class="footer">
+                This is an automated email—please do not reply.<br />
+                &copy; {2025} SkinSights AI. All rights reserved.
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    _send_email(to_email, subject, body_html)
