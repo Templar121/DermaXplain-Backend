@@ -246,6 +246,48 @@ Authorization: Bearer < bearer token returned from /login of User >
 PDF Report
 ```
 
+### 10. PUT api/users/update-username
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of User >
+```
+```json
+{
+  "new_name": "NewUser"
+}
+```
+### 11. POST api/users/forgot-password
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of User >
+```
+```json
+{
+  "email": "email_id"
+}
+```
+### Response
+```json
+{
+    "msg": "Password reset link sent"
+}
+```
+
+### 12. POST /reset-password
+```bash
+Header 
+
+Authorization: Bearer < bearer token returned from /login of User >
+```
+```json
+{
+  "token": "<copied_token_from_email>",
+  "new_password": "NewPassword123"
+}
+```
+
 ## Admin Endpoints
 
 ### 1. GET /api/admin/users
