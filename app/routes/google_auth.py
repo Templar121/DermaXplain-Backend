@@ -40,7 +40,7 @@ async def google_login(data: TokenModel):
             user["_id"] = result.inserted_id
 
         payload = {
-            "sub": str(user["_id"]),
+            "sub": str(user["email"]),
             "email": user["email"],
             "role": user.get("role", "user")
         }
