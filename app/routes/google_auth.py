@@ -14,7 +14,7 @@ load_dotenv()
 router = APIRouter()
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-JWT_SECRET = os.getenv("JWT_SECRET", "secret_key")
+JWT_SECRET = os.getenv("SECRET_KEY", "secret_key")
 
 class TokenModel(BaseModel):
     token: str
