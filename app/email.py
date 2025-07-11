@@ -11,7 +11,7 @@ EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 def send_registration_email(to_email: str, name: str):
-    subject = "🎉 Welcome to SkinSights AI! Your Registration is Confirmed"
+    subject = "🎉 Welcome to DermaXplain! Your Registration is Confirmed"
 
     # HTML body with hero banner, button, and social links
     body_html = f"""
@@ -85,8 +85,8 @@ def send_registration_email(to_email: str, name: str):
             <div class="hero"></div>
             <div class="content">
                 <h1>Welcome, {name}! 👋</h1>
-                <p>We’re excited to have you join the <strong>SkinSights AI</strong> community!</p>
-                <p>SkinSights AI leverages state-of-the-art machine learning to deliver transparent, interpretable skin diagnostics—empowering you with insights you can trust.</p>
+                <p>We’re excited to have you join the <strong>DermaXplain</strong> community!</p>
+                <p>DermaXplain leverages state-of-the-art machine learning to deliver transparent, interpretable skin diagnostics—empowering you with insights you can trust.</p>
                 <a href="https://skinsights.ai/dashboard" class="button">Go to Your Dashboard</a>
                 <p>To get started:</p>
                 <ul>
@@ -105,7 +105,7 @@ def send_registration_email(to_email: str, name: str):
             </div>
             <div class="footer">
                 This is an automated email—please do not reply to this message.<br />
-                &copy; {2025} SkinSights AI. All rights reserved.
+                &copy; {2025} DermaXplain. All rights reserved.
             </div>
         </div>
     </body>
@@ -117,7 +117,7 @@ def send_registration_email(to_email: str, name: str):
         
         
 def send_deletion_email(to_email: str, name: str):
-    subject = "😔 Your SkinSights AI Account Has Been Deleted"
+    subject = "😔 Your DermaXplain Account Has Been Deleted"
 
     # HTML body with clean design, button to rejoin, and support link
     body_html = f"""
@@ -174,16 +174,16 @@ def send_deletion_email(to_email: str, name: str):
         <div class="container">
             <div class="content">
                 <h1>Hi {name},</h1>
-                <p>Your account at <strong>SkinSights AI</strong> has been successfully deleted.</p>
+                <p>Your account at <strong>DermaXplain</strong> has been successfully deleted.</p>
                 <p>We’re sorry to see you go! All your data has been permanently removed from our platform in accordance with our privacy policy.</p>
                 <a href="https://skinsights.ai/register" class="button">Re-register Now</a>
                 <p>If you have any feedback or questions, please let us know at <a href="mailto:support@skinsights.ai">support@skinsights.ai</a>. We’d love to hear from you.</p>
                 <p>Thank you for being part of our journey. We wish you health and happiness.</p>
-                <p><em>The SkinSights AI Team</em></p>
+                <p><em>The DermaXplain Team</em></p>
             </div>
             <div class="footer">
                 This is an automated email—please do not reply.<br />
-                &copy; {2025} SkinSights AI. All rights reserved.
+                &copy; {2025} DermaXplain. All rights reserved.
             </div>
         </div>
     </body>
@@ -193,7 +193,7 @@ def send_deletion_email(to_email: str, name: str):
     
     
 def send_admin_deletion_email(to_email: str, name: str):
-    subject = "⚠️ Your SkinSights AI Account Was Deleted by Admin"
+    subject = "⚠️ Your DermaXplain Account Was Deleted by Admin"
 
     body_html = f"""
     <html>
@@ -249,16 +249,16 @@ def send_admin_deletion_email(to_email: str, name: str):
         <div class="container">
             <div class="content">
                 <h1>Hello {name},</h1>
-                <p>This is to inform you that your account at <strong>SkinSights AI</strong> has been deleted by an administrator.</p>
+                <p>This is to inform you that your account at <strong>DermaXplain</strong> has been deleted by an administrator.</p>
                 <p>All of your associated data has been removed as per our platform policy.</p>
                 <p>If you believe this action was taken in error or have any concerns, you can reach us at <a href="mailto:support@skinsights.ai">support@skinsights.ai</a>.</p>
                 <a href="https://skinsights.ai/register" class="button">Contact Support</a>
                 <p>We appreciate your understanding and cooperation.</p>
-                <p><em>— The SkinSights AI Team</em></p>
+                <p><em>— The DermaXplain Team</em></p>
             </div>
             <div class="footer">
                 This is an automated message—please do not reply directly.<br />
-                &copy; {2025} SkinSights AI. All rights reserved.
+                &copy; {2025} DermaXplain. All rights reserved.
             </div>
         </div>
     </body>
@@ -288,7 +288,7 @@ def _send_email(to_email: str, subject: str, body_html: str):
         print(f"❌ Failed to send email '{subject}': {e}")
 
 async def send_reset_email(to_email: str, link: str):
-    subject = "🔒 Reset Your SkinSights AI Password"
+    subject = "🔒 Reset Your DermaXplain Password"
 
     # HTML body with clean design, button to reset password, and support link
     body_html = f"""
@@ -346,16 +346,16 @@ async def send_reset_email(to_email: str, link: str):
             <div class="content">
                 <h1>Password Reset Requested</h1>
                 <p>Hello,</p>
-                <p>We received a request to reset the password for your <strong>SkinSights AI</strong> account (<em>{to_email}</em>).</p>
+                <p>We received a request to reset the password for your <strong>DermaXplain</strong> account (<em>{to_email}</em>).</p>
                 <p>Click the button below to choose a new password. This link will expire in 60 minutes for your security.</p>
                 <a href="{link}" class="button">Reset My Password</a>
                 <p>If you didn’t request a password reset, you can safely ignore this email. No changes were made to your account.</p>
                 <p>If you have any questions or need further assistance, please contact our support team at <a href="mailto:support@skinsights.ai">support@skinsights.ai</a>.</p>
-                <p>Stay safe,<br /><em>The SkinSights AI Team</em></p>
+                <p>Stay safe,<br /><em>The DermaXplain Team</em></p>
             </div>
             <div class="footer">
                 This is an automated email—please do not reply.<br />
-                &copy; {2025} SkinSights AI. All rights reserved.
+                &copy; {2025} DermaXplain. All rights reserved.
             </div>
         </div>
     </body>
