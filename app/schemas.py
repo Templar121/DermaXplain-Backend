@@ -83,13 +83,16 @@ class ScanOut(BaseModel):
     additional_info: Optional[str]
     uploaded_at: datetime
     image_filename: str
-    prediction: Prediction  # or Dict[str, float]
+    prediction: Prediction
     image_base64: Optional[str]
 
+    # ✅ Add this block:
+    explanations: Optional[Dict[str, Optional[str]]] = None  # keys: shap_base64, occlusion_base64
+
     class Config:
-        from_attributes      = True
-        json_encoders        = {ObjectId: str}
-        populate_by_name     = True
+        from_attributes = True
+        json_encoders = {ObjectId: str}
+        populate_by_name = True
         arbitrary_types_allowed = True
         
 class ForgotPasswordRequest(BaseModel):

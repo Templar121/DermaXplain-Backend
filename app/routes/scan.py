@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status
 from ..auth import get_current_user
 from ..database import scans_collection
-from ..ml_model import predict_scan
+from ..ml_model import predict_scan, explain_image
 from ..schemas import ScanOut
 from typing import List
 from bson import ObjectId, Binary
@@ -41,15 +41,35 @@ async def upload_scan(
 
     image_bytes = await image.read()
 
-    # Save temp file for prediction
+    # Save temp file
     temp_filename = f"{uuid.uuid4().hex}_{image.filename}"
     temp_path = os.path.join(UPLOAD_DIR, temp_filename)
     with open(temp_path, "wb") as f:
         f.write(image_bytes)
 
+    # Predict
     prediction_class, confidence_score = predict_scan(temp_path)
-    os.remove(temp_path)
 
+    # === Generate SHAP & Occlusion images ===
+    explanation_paths = explain_image(temp_path)
+
+    # Read and encode explanation images
+    shap_base64, occ_base64 = None, None
+    if explanation_paths.get("shap") and os.path.exists(explanation_paths["shap"]):
+        with open(explanation_paths["shap"], "rb") as f:
+            shap_base64 = base64.b64encode(f.read()).decode("utf-8")
+
+    if explanation_paths.get("occlusion") and os.path.exists(explanation_paths["occlusion"]):
+        with open(explanation_paths["occlusion"], "rb") as f:
+            occ_base64 = base64.b64encode(f.read()).decode("utf-8")
+
+    # Cleanup temp images
+    os.remove(temp_path)
+    for path in explanation_paths.values():
+        if path and os.path.exists(path):
+            os.remove(path)
+
+    # MongoDB scan entry
     scan = {
         "user_email": current_user["email"],
         "patient_name": patient_name,
@@ -64,14 +84,15 @@ async def upload_scan(
         "prediction": {
             "class": prediction_class,
             "confidence": confidence_score
+        },
+        "explanations": {
+            "shap_base64": shap_base64,
+            "occlusion_base64": occ_base64
         }
     }
 
     result = await scans_collection.insert_one(scan)
-
-    # ← Here’s the crucial line:
     scan["_id"] = str(result.inserted_id)
-
     scan["image_base64"] = base64.b64encode(image_bytes).decode("utf-8")
 
     return ScanOut(**scan)
@@ -109,7 +130,7 @@ async def get_scan_detail(scan_id: str, current_user: dict = Depends(get_current
     # Convert MongoDB _id to string
     doc["_id"] = str(doc["_id"])
 
-    # Convert Binary to base64
+    # Convert Binary image data to base64
     raw = doc.get("image_data")
     if raw:
         image_bytes = raw if isinstance(raw, (bytes, bytearray)) else raw.value
@@ -117,7 +138,13 @@ async def get_scan_detail(scan_id: str, current_user: dict = Depends(get_current
     else:
         doc["image_base64"] = None
 
-    # Remove image_data so it doesn't interfere with Pydantic
+    # Ensure explanations field exists with base64 keys
+    doc["explanations"] = doc.get("explanations", {
+        "shap_base64": None,
+        "occlusion_base64": None
+    })
+
+    # Remove raw image data to avoid serialization issues
     doc.pop("image_data", None)
 
     return ScanOut(**doc)
@@ -144,6 +171,9 @@ async def delete_scan(scan_id: str, current_user: dict = Depends(get_current_use
         
 @router.get("/my-scans/{scan_id}/download")
 async def download_scan_pdf(scan_id: str, user=Depends(get_current_user)):
+    if not ObjectId.is_valid(scan_id):
+        raise HTTPException(status_code=400, detail="Invalid scan ID")
+
     scan = await scans_collection.find_one({
         "_id": ObjectId(scan_id),
         "user_email": user["email"]
@@ -161,20 +191,27 @@ async def download_scan_pdf(scan_id: str, user=Depends(get_current_user)):
         scan["image_base64"] = None
 
     # Map class label to readable name
-    class_code = scan["prediction"]["class"]
+    class_code = scan.get("prediction", {}).get("class", "")
     readable_name = readable_class_mapping.get(class_code, "Unknown")
     scan["prediction"]["readable_name"] = readable_name
+
+    # Inject explanations (if missing, default to None)
+    scan["explanations"] = scan.get("explanations", {
+        "shap_base64": None,
+        "occlusion_base64": None
+    })
 
     # Create PDF
     os.makedirs("temp_uploads", exist_ok=True)
     pdf_path = f"temp_uploads/report_{scan_id}.pdf"
     generate_pdf_report(user, scan, pdf_path)
 
-    # Cleanup after 10s
+    # Cleanup after 10 seconds
     async def cleanup():
         await asyncio.sleep(10)
         if os.path.exists(pdf_path):
             os.remove(pdf_path)
+
     asyncio.create_task(cleanup())
 
     return FileResponse(

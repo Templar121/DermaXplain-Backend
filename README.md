@@ -172,6 +172,28 @@ Authorization: Bearer < bearer token returned from /login iof User >
 }
 ```
 
+### Response
+```json
+{
+  "_id": "abc123",
+  "patient_name": "John Doe",
+  "patient_age": 45,
+  "gender": "Male",
+  "scan_area": "Back",
+  "image_filename": "scan1.jpg",
+  "image_content_type": "image/jpeg",
+  "image_base64": "...",
+  "prediction": {
+    "class": "bkl",
+    "confidence": 0.956
+  },
+  "explanations": {
+    "shap_base64": "...",
+    "occlusion_base64": "..."
+  }
+}
+```
+
 ### 6. GET /scan/my-scans
 
 ### GET
@@ -205,20 +227,23 @@ Authorization: Bearer < bearer token returned from /login of User >
 ### Response
 ```json
 {
-  "id": "ID",
-  "patient_name": "Alice Roy",
-  "patient_age": 32,
-  "gender": "Male",
-  "scan_area": "scan_area",
-  "additional_info": "info",
-  "uploaded_at": "uploaded_at",
-  "image_filename": "image_filename",
+  "_id": "64f00a2ea123...",
+  "patient_name": "Alice",
+  "patient_age": 34,
+  "gender": "Female",
+  "scan_area": "Forearm",
+  "additional_info": "Itchy lesion",
+  "uploaded_at": "2025-07-12T06:42:11.431Z",
+  "image_filename": "lesion1.jpg",
   "prediction": {
-    "class": "class",
-    "confidence": "confidence"
+    "class": "bkl",
+    "confidence": 0.9212
   },
-  "image_base64": "imgae_base64"
-  
+  "image_base64": "...",
+  "explanations": {
+    "shap_base64": "...",
+    "occlusion_base64": "..."
+  }
 }
 ```
 
