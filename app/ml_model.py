@@ -1,10 +1,17 @@
+from PIL import Image as PILImage
+PILImage._showxv = lambda *args, **kwargs: None  # disables internal GUI calls
+PILImage.show = lambda *args, **kwargs: None
+
 from pathlib import Path
 import numpy as np
 from PIL import Image, UnidentifiedImageError
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 import shap
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
 
 # --- Label Mapping ---
 label_mapping = {

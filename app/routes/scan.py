@@ -10,6 +10,7 @@ import uuid, os, base64
 from fastapi.responses import FileResponse
 from app.utils.pdf_generator import generate_pdf_report
 import asyncio
+from app.utils.thread_executor import run_in_thread
 
 router = APIRouter()
 
@@ -28,14 +29,10 @@ UPLOAD_DIR = "temp_uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 async def _background_explain_and_update(scan_id: str, image_path: str):
-    """
-    Generate SHAP and occlusion maps and update the MongoDB document.
-    """
-    # run explanations
-    explanation_paths = explain_image(image_path)
+    # Run explanation in background thread
+    explanation_paths = await run_in_thread(explain_image, image_path)
 
     shap_b64 = occ_b64 = None
-    # encode generated images
     if explanation_paths.get("shap") and os.path.exists(explanation_paths["shap"]):
         with open(explanation_paths["shap"], "rb") as f:
             shap_b64 = base64.b64encode(f.read()).decode()
@@ -43,7 +40,6 @@ async def _background_explain_and_update(scan_id: str, image_path: str):
         with open(explanation_paths["occlusion"], "rb") as f:
             occ_b64 = base64.b64encode(f.read()).decode()
 
-    # update DB with explanations
     await scans_collection.update_one(
         {"_id": ObjectId(scan_id)},
         {"$set": {
@@ -52,7 +48,7 @@ async def _background_explain_and_update(scan_id: str, image_path: str):
         }}
     )
 
-    # cleanup temp files
+    # cleanup
     try:
         os.remove(image_path)
     except OSError:
