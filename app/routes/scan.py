@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status, BackgroundTasks
 from ..auth import get_current_user
 from ..database import scans_collection
-from ..ml_model import predict_scan, explain_image
+from ..ml_model import predict_scan
 from ..schemas import ScanOut
 from typing import List
 from bson import ObjectId, Binary
@@ -11,6 +11,15 @@ from fastapi.responses import FileResponse
 from app.utils.pdf_generator import generate_pdf_report
 import asyncio
 from app.utils.thread_executor import run_in_thread
+import aiohttp
+from dotenv import load_dotenv
+
+load_dotenv()
+
+EXPLAIN_SERVICE_URL = os.getenv(
+    "EXPLAIN_MICROSERVICE_URL",
+    "http://localhost:8001/explain"  # fallback
+)
 
 router = APIRouter()
 
@@ -29,17 +38,13 @@ UPLOAD_DIR = "temp_uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 async def _background_explain_and_update(scan_id: str, image_path: str):
-    # Run explanation in background thread
-    explanation_paths = await run_in_thread(explain_image, image_path)
+    # 1. Call the explanation microservice and get base64 strings
+    result = await call_explanation_microservice(image_path)
 
-    shap_b64 = occ_b64 = None
-    if explanation_paths.get("shap") and os.path.exists(explanation_paths["shap"]):
-        with open(explanation_paths["shap"], "rb") as f:
-            shap_b64 = base64.b64encode(f.read()).decode()
-    if explanation_paths.get("occlusion") and os.path.exists(explanation_paths["occlusion"]):
-        with open(explanation_paths["occlusion"], "rb") as f:
-            occ_b64 = base64.b64encode(f.read()).decode()
+    shap_b64 = result.get("shap_base64")
+    occ_b64  = result.get("occlusion_base64")
 
+    # 2. Update MongoDB directly with those base64 values
     await scans_collection.update_one(
         {"_id": ObjectId(scan_id)},
         {"$set": {
@@ -48,17 +53,30 @@ async def _background_explain_and_update(scan_id: str, image_path: str):
         }}
     )
 
-    # cleanup
+    # 3. Cleanup the temp image file
     try:
         os.remove(image_path)
     except OSError:
         pass
-    for p in explanation_paths.values():
-        if p and os.path.exists(p):
-            try:
-                os.remove(p)
-            except OSError:
-                pass
+
+            
+async def call_explanation_microservice(image_path: str):
+    url = EXPLAIN_SERVICE_URL  # adjust if deployed differently
+    try:
+        async with aiohttp.ClientSession() as session:
+            with open(image_path, 'rb') as f:
+                form = aiohttp.FormData()
+                form.add_field('file', f, filename="scan.jpg", content_type='image/jpeg')
+
+                async with session.post(url, data=form) as resp:
+                    if resp.status == 200:
+                        return await resp.json()
+                    else:
+                        print(f"[ERROR] Microservice failed: {resp.status}")
+                        return {}
+    except Exception as e:
+        print(f"[ERROR] Could not contact microservice: {e}")
+        return {}
 
 @router.post("/upload-scan", response_model=ScanOut)
 async def upload_scan(

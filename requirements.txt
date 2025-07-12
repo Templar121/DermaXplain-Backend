@@ -46,3 +46,4 @@ dnspython
 google-auth
 google-auth-oauthlib
 PyJWT
+aiohttp>=3.8.1
