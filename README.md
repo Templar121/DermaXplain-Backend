@@ -126,7 +126,7 @@ Check Database Connection
 ```
 
 ### Google Auth
-### POST /google-login
+### POST auth/google
 ### Content-Type: application/json
 ```json
 {

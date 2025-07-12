@@ -29,7 +29,7 @@ def preprocess_image(image_path, target_size=(64, 64)):
     try:
         img = Image.open(image_path).convert('RGB')
         img = img.resize(target_size)
-        arr = np.asarray(img, dtype=np.float32) / 255.0
+        arr = np.asarray(img, dtype=np.float32)
         return np.expand_dims(arr, axis=0)
     except FileNotFoundError:
         print(f"[ERROR] File not found: {image_path}")
