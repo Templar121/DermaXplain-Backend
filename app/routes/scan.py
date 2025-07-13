@@ -16,10 +16,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-EXPLAIN_SERVICE_URL = os.getenv(
-    "EXPLAIN_MICROSERVICE_URL",
-    "http://localhost:8001/explain"  # fallback
-)
+SHAP_MICROSERVICE_URL = os.getenv("SHAP_MICROSERVICE_URL", "http://localhost:8001/explain")
+OCCL_MICROSERVICE_URL = os.getenv("OCCL_MICROSERVICE_URL", "http://localhost:8002/explain")
+
 
 router = APIRouter()
 
@@ -41,8 +40,8 @@ async def _background_explain_and_update(scan_id: str, image_path: str):
     # 1. Call the explanation microservice and get base64 strings
     result = await call_explanation_microservice(image_path)
 
-    shap_b64 = result.get("shap_base64")
-    occ_b64  = result.get("occlusion_base64")
+    shap_b64 = result.get("shap")
+    occ_b64  = result.get("occlusion")
 
     # 2. Update MongoDB directly with those base64 values
     await scans_collection.update_one(
@@ -60,23 +59,30 @@ async def _background_explain_and_update(scan_id: str, image_path: str):
         pass
 
             
-async def call_explanation_microservice(image_path: str):
-    url = EXPLAIN_SERVICE_URL  # adjust if deployed differently
-    try:
-        async with aiohttp.ClientSession() as session:
-            with open(image_path, 'rb') as f:
-                form = aiohttp.FormData()
-                form.add_field('file', f, filename="scan.jpg", content_type='image/jpeg')
+async def call_explanation_microservice(image_path: str) -> dict:
+    results = {}
 
-                async with session.post(url, data=form) as resp:
-                    if resp.status == 200:
-                        return await resp.json()
-                    else:
-                        print(f"[ERROR] Microservice failed: {resp.status}")
-                        return {}
-    except Exception as e:
-        print(f"[ERROR] Could not contact microservice: {e}")
-        return {}
+    async def call_one(url: str, label: str):
+        try:
+            async with aiohttp.ClientSession() as session:
+                with open(image_path, 'rb') as f:
+                    form = aiohttp.FormData()
+                    form.add_field('file', f, filename="scan.jpg", content_type='image/jpeg')
+
+                    async with session.post(url, data=form) as resp:
+                        if resp.status == 200:
+                            data = await resp.json()
+                            results[label] = data.get(f"{label}_base64")
+                        else:
+                            print(f"[ERROR] {label.upper()} failed: {resp.status}")
+        except Exception as e:
+            print(f"[ERROR] Could not contact {label} microservice: {e}")
+
+    await asyncio.gather(
+        call_one(SHAP_MICROSERVICE_URL, "shap"),
+        call_one(OCCL_MICROSERVICE_URL, "occlusion")
+    )
+    return results
 
 @router.post("/upload-scan", response_model=ScanOut)
 async def upload_scan(
